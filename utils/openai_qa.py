@@ -9,7 +9,7 @@ async def ask_gpt_async(context_clauses, question):
     prompt = (
         "You are an expert insurance contract analyst. "
         "Given the following clauses, answer in concise formal language using correct insurance terminology. "
-        "Only return the final answer string, nothing else.\n\n"
+        "\n"
         "Context:\n" +
         "\n---\n".join(context_clauses) +
         f"\n\nQ: {question}\nA:"
