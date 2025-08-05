@@ -1,28 +1,34 @@
+# utils/openai_qa.py
 import os
 import openai
+import asyncio
 
-def ask_gpt(context_clauses, question):
-    client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    
-    system_prompt = (
+client = openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+async def ask_gpt_async(context_clauses, question):
+    prompt = (
         "You are an expert insurance contract analyst. "
-        "Given the following clauses, answer precisely and formally, including all key conditions and legal references. "
-        "If uncertain, say so clearly.\n"
-    )
-    user_prompt = (
-        system_prompt +
+        "Given the following clauses, answer in concise formal language using correct insurance terminology. "
+        "Only return the final answer string, nothing else.\n\n"
+        "Context:\n" +
         "\n---\n".join(context_clauses) +
-        f"\n\nAnswer the question: {question}\n" +
-        "Answer in formal contract style, using accurate terminology.\n"
+        f"\n\nQ: {question}\nA:"
     )
-    
-    response = client.chat.completions.create(
-        model="gpt-4",  # or "gpt-3.5-turbo" if budget constrained
-        messages=[{"role": "user", "content": user_prompt}],
-        max_tokens=75,  # adjust as needed for length
-        temperature=0.0,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-    )
-    return response.choices[0].message.content
+
+    try:
+        response = await client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
+            max_tokens=140
+        )
+        return response.choices[0].message.content.strip()
+    except Exception:
+        # fallback to gpt-4 if needed
+        response = await client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
+            max_tokens=140
+        )
+        return response.choices[0].message.content.strip()
