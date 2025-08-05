@@ -3,12 +3,5 @@ uvicorn
 openai
 pdfplumber
 python-docx
-docx
 faiss-cpu
 requests
-os
-faiss
-numpy
-asyncio
-tempfile
-pydantic
