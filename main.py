@@ -17,7 +17,7 @@ class QueryRequest(BaseModel):
     documents: str
     questions: list
 
-def chunk_text(text, max_length=160):
+def chunk_text(text, max_length=300):
     paragraphs = [p.strip() for p in text.split('\n') if p.strip()]
     chunks = []
     current = ""
