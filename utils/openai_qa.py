@@ -6,19 +6,26 @@ import asyncio
 client = openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 async def ask_gpt_async(context_clauses, question):
+    # Join context clauses nicely with separators
+    joined_context = "\n---\n".join(context_clauses)
+
     prompt = (
-        "You are a legal assistant trained in analyzing Indian health insurance policies. "
-        "Given the clauses below, answer the question in concise, clause-style language used in official policy summaries. "
-        "Do not add or assume any facts not in the context. Only use details mentioned in the clauses. "
-        "Do not include INR amounts, percentages, or time durations unless explicitly mentioned.\n\n"
-        "Be clear, accurate, and specific in 1–2 sentences. Do not restate the question or mention the policy name.\n\n"
+        "You are a legal assistant trained to analyze Indian health insurance policies.\n\n"
+        "Given the clauses below, answer the question using the exact style and language of official policy summaries:\n"
+        "- Do not introduce or assume facts not present in the context.\n"
+        "- Include only explicitly mentioned time durations, INR amounts, or percentages.\n"
+        "- Do NOT restate the question or mention the policy name.\n"
+        "- Be clear, precise, and specific.\n\n"
         "Examples:\n"
-        "- 'A grace period of thirty days is provided after the premium due date without loss of continuity benefits.'\n"
-        "- 'Yes, maternity expenses are covered after 24 months, limited to two deliveries.'\n"
-        "- 'Yes, organ donor’s hospitalisation for harvesting is covered, but post-operative treatment is excluded.'\n"
-        "- 'Room rent limited to 1% of SI per day; ICU at 2% of SI.'\n\n"
-        f"Context:\n---\n" + "\n---\n".join(context_clauses) +
-        f"\n\nQ: {question}\nA:"
+        "- \"A grace period of thirty days is provided after the premium due date without loss of continuity benefits.\"\n"
+        "- \"Yes, maternity expenses are covered after 24 months, limited to two deliveries.\"\n"
+        "- \"Yes, organ donor's hospitalisation for harvesting is covered, but post-operative treatment is excluded.\"\n"
+        "- \"Room rent limited to 1% of SI per day; ICU at 2% of SI.\"\n\n"
+        "---\n"
+        f"{joined_context}\n\n"
+        "Question:\n"
+        f"{question}\n\n"
+        "Answer:"
     )
 
     try:
