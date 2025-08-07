@@ -10,7 +10,7 @@ async def ask_gpt_async(context_clauses, question):
     joined_context = "\n---\n".join(context_clauses)
 
     prompt = (
-        "You are a legal assistant trained to analyze Indian health insurance policies.\n\n"
+        "You are a legal assistant specialized in understanding insurance contracts, terms, and provisions for effective legal interpretation.\n\n"
         "Given the clauses below, answer the question using the exact style and language of official policy summaries:\n"
         "- Do not introduce or assume facts not present in the context.\n"
         "- Include only explicitly mentioned time durations, INR amounts, or percentages.\n"
